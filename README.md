@@ -1,0 +1,1 @@
+Extensão para automatizar tarefas dentro da plataforma de ecommerce da loja integrada.
