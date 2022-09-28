@@ -1,70 +1,118 @@
-console.log('coidgo1');
-// var script = document.createElement('script');
-// script.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
-// document.getElementsByTagName('head')[0].appendChild(script);
-console.log('codigo2');
-console.log($);
-
 let botaoAdicionarCodigo = document.querySelector('.header-navigation-actions');
 let botaoBackupCodigo = botaoAdicionarCodigo.cloneNode(true);
 botaoBackupCodigo.style = 'margin-right: -20px';
-//botaoAdicionarCodigo.parentElement.appendChild(botaoBackupCodigo);
 botaoAdicionarCodigo.insertAdjacentElement('beforebegin', botaoBackupCodigo);
-console.log('botaoBackupCodigo', botaoBackupCodigo);
 botaoBackupCodigo.querySelector('a.w-auto').innerText = 'Download código';
-//botaoBackupCodigo.querySelector('a.flex').innerHTML = '';
-// botaoBackupCodigo.querySelector(
-//   'a.flex'
-// ).innerHTML = `<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-// viewBox="0 0 485 485" style="enable-background:new 0 0 485 485;" xml:space="preserve">
-//    <path d="M426.5,458h-368C51,458,45,464,45,471.5S51,485,58.5,485h368c7.5,0,13.5-6,13.5-13.5S434,458,426.5,458z"/>
-//    <path d="M233,378.7c2.5,2.5,6,4,9.5,4s7-1.4,9.5-4l107.5-107.5c5.3-5.3,5.3-13.8,0-19.1c-5.3-5.3-13.8-5.3-19.1,0L256,336.5v-323
-//        C256,6,250,0,242.5,0S229,6,229,13.5v323l-84.4-84.4c-5.3-5.3-13.8-5.3-19.1,0s-5.3,13.8,0,19.1L233,378.7z"/>
-// </svg>
-// `;
 
 let anchors = botaoBackupCodigo.querySelectorAll('a');
 for (let a of anchors) {
   a.href = '#';
 }
-async function consultarURL(url) {
+async function getBlobFromUrl(url) {
   var consulta = await $.ajax({
     type: 'GET',
-    dataType: 'html',
     url: url,
+    xhrFields: {
+      withCredentials: true,
+    },
+    'Access-Control-Allow-Origin': 'https://app.lojaintegrada.com.br/',
+    'Access-Control-Allow-Credentials': true,
   });
-  console.log(consulta);
+
+  function getValorSelecionado(elSelect) {
+    for (let option of elSelect.querySelectorAll('option')) {
+      if (option.selected) return option.value;
+    }
+    return false;
+  }
+  function getTipo(htmlEl) {
+    let selectTipo = htmlEl.querySelector('#id_tipo');
+    let tipo = getValorSelecionado(selectTipo);
+    if (tipo == 'javascript') return 'js';
+    return tipo;
+  }
+
+  function getPaginaPublicacao(htmlEl) {
+    let selectPagina = htmlEl.querySelector('#id_pagina_publicacao');
+    return getValorSelecionado(selectPagina);
+  }
+
+  function getLocalPublicacao(htmlEl) {
+    let selectLocal = htmlEl.querySelector('#id_local_publicacao');
+    return getValorSelecionado(selectLocal);
+  }
+
+  let htmlEl = document.createElement('html');
+  htmlEl.innerHTML = consulta.trim();
+  let nome = htmlEl.querySelector('#id_descricao').value;
+
+  let codigoProgramado = `${getPaginaPublicacao(htmlEl)} - ${getLocalPublicacao(
+    htmlEl
+  )}\n\n${htmlEl.querySelector('#id_conteudo').innerText}`;
+  let formato = getTipo(htmlEl);
+  return {
+    blob: new Blob([codigoProgramado], { type: 'text/plain;charset=utf-8' }),
+    format: formato,
+    name: nome,
+  };
 }
 
-//document.addEventListener('DOMContentLoaded', function (e) {
-console.log('Teste1');
+function createLoading(numEls = 1) {
+  let headerNavigationDiv = document.querySelector('.header-navigation');
+  let loadingDiv = document.createElement('div');
+  loadingDiv.style = 'margin-top: -25px;';
+  loadingDiv.innerHTML = `<p style="text-align:right;">Baixando elementos: <strong id="loadingElementsNum">0</strong><strong id="totalLoadingElements">/${numEls}</strong></p>`;
+  loadingDiv.id = 'liue_loadingDiv';
+  headerNavigationDiv.insertAdjacentElement('afterend', loadingDiv);
+}
+
+function setCurrentLoading(num) {
+  let loadingNum = document.querySelector('#loadingElementsNum');
+  loadingNum.innerText = `${num}`;
+}
+
+function destroyLoading() {
+  let loadingDiv = document.querySelector('#liue_loadingDiv');
+  if (loadingDiv) loadingDiv.remove();
+}
+
+function getZipName() {
+  let loja = document.querySelector(
+    '.truncate.text-on-base.font-semibold.text-sm.leading-4'
+  ).innerText;
+  let now = new Date();
+  let data = [now.getFullYear(), now.getMonth() + 1, now.getDate()]
+    .toString()
+    .replaceAll(',', '');
+  let time = [now.getHours(), now.getMinutes(), now.getSeconds()]
+    .toString()
+    .replaceAll(',', '');
+  return `Backup LojaIntegrada - ${loja} - ${data} ${time}`;
+}
 botaoBackupCodigo.onclick = () => {
-  console.log('Teste2');
-  let caixaDeCodigos = document.querySelector('.rows.min-h-auto');
-  console.log('Teste3');
-  let divsCodigos = caixaDeCodigos.querySelectorAll('.row.small');
-  console.log('Teste4');
-  for (let divCodigo of divsCodigos) {
-    let num;
-    for (let cls of divCodigo.classList) {
-      if (cls.startsWith('codigo_')) {
-        num = cls.replace('codigo_', '');
-        break;
+  var zip = new JSZip();
+  async function downloadFiles() {
+    let caixaDeCodigos = document.querySelector('.rows.min-h-auto');
+    let divsCodigos = caixaDeCodigos.querySelectorAll('.row.small');
+    createLoading(divsCodigos.length);
+    let i = 0;
+    for (let divCodigo of divsCodigos) {
+      i++;
+      setCurrentLoading(i);
+      let num;
+      for (let cls of divCodigo.classList) {
+        if (cls.startsWith('codigo_')) {
+          num = cls.replace('codigo_', '');
+          break;
+        }
       }
+      let f = await getBlobFromUrl(`/painel/configuracao/html/${num}/editar`);
+      zip.file(`${f.name}.${f.format}`, f.blob);
     }
-    // console.log(
-    //   'a',
-    //   `https://app.lojaintegrada.com.br/painel/configuracao/html/${num}/editar`
-    // );
-    /* var consulta = $.ajax({
-      type: 'GET',
-      dataType: 'html',
-      url: `https://app.lojaintegrada.com.br/painel/configuracao/html/${num}/editar`,
-    }); */
-    consultarURL(
-      `https://app.lojaintegrada.com.br/painel/configuracao/html/${num}/editar`
-    );
-    // console.log(consulta);
-    // console.log(consulta.responseText);
+    zip.generateAsync({ type: 'blob' }).then(function (content) {
+      saveAs(content, getZipName());
+    });
+    destroyLoading();
   }
+  downloadFiles();
 };

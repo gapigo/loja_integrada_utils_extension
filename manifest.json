@@ -8,7 +8,12 @@
       "matches": [
         "https://app.lojaintegrada.com.br/painel/configuracao/html/listar"
       ],
-      "js": ["jquery.js", "codigos_html.js"]
+      "js": [
+        "jquery.js",
+        "lib/zip/jszip.js",
+        "lib/fileSaver/FileSaver.js",
+        "codigos_html.js"
+      ]
     }
   ],
   "action": {
