@@ -1,0 +1,22 @@
+{
+  "name": "Loja Integrada Utils",
+  "description": "Extensão que trás algumas features que facilitam a vida do programador na plataforma da loja integrada",
+  "version": "1.0",
+  "manifest_version": 3,
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.lojaintegrada.com.br/painel/configuracao/html/listar"
+      ],
+      "js": ["jquery.js", "codigos_html.js"]
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "logo/logo_16.png",
+      "32": "logo/logo_32.png",
+      "48": "logo/logo_48.png",
+      "128": "logo/logo_128.png"
+    }
+  }
+}
