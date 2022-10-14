@@ -2,10 +2,113 @@
 <html lang="en">
   <head>
     <link rel="stylesheet" href="button.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&amp;display=swap"
+      data-tag="font"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&amp;display=swap"
+      data-tag="font"
+    />
+
+    <style>
+      .frame2608143-frame2608143 {
+        width: 203px;
+        height: 62px;
+        display: flex;
+        padding: 11px 14px;
+        position: relative;
+        box-shadow: 0px 4px 4px 0px rgb(0 0 0 / 25%);
+        align-items: center;
+        flex-shrink: 0;
+        border-color: transparent;
+        background-color: rgba(231, 224, 236, 1);
+      }
+      .frame2608143-frame2608142 {
+        display: flex;
+        position: relative;
+        align-items: flex-start;
+        border-color: transparent;
+        margin-right: 40px;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .frame2608143-text {
+        color: rgb(127, 0, 255, 1);
+        height: auto;
+        font-size: 12px;
+        align-self: auto;
+        font-style: Regular;
+        text-align: left;
+        font-family: Roboto;
+        font-weight: 400;
+        line-height: 16px;
+        font-stretch: normal;
+        margin-right: 0;
+        margin-bottom: 0px;
+        text-decoration: none;
+      }
+      .frame2608143-text2 {
+        color: rgb(55 55 55);
+        font-weight: 700;
+        font-size: 22px;
+        height: auto;
+        align-self: auto;
+        text-align: left;
+        line-height: 24px;
+        margin-right: 0;
+        margin-bottom: 0;
+      }
+      .frame2608143-segment {
+        display: flex;
+        position: relative;
+        align-items: flex-start;
+        border-color: transparent;
+        justify-content: flex-end;
+      }
+      .frame2608143-icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        position: relative;
+        align-items: flex-start;
+        flex-shrink: 0;
+        border-color: transparent;
+      }
+      .frame2608143-icon1 {
+        top: 5px;
+        left: 5px;
+        width: 14px;
+        height: 14px;
+        position: absolute;
+      }
+    </style>
   </head>
+
   <body>
-    <button id="changeColor"></button>
-    <script src="popup.js"></script>
-    <div id="mediaMercadoLivre"></div>
+    <!-- <button id="changeColor"></button> -->
+    <script src="./popup.js"></script>
+    <!-- <div id="mediaMercadoLivre">Teste</div> -->
+    <div class="frame2608143-frame2608143">
+      <div class="frame2608143-frame2608142">
+        <span class="frame2608143-text">
+          <span>Media mercado livre</span>
+        </span>
+        <span class="frame2608143-text2 m3bodylarge" id="mediaMercadoLivre">
+          <span>Sem informacao</span>
+        </span>
+      </div>
+      <div class="frame2608143-segment">
+        <div class="frame2608143-icon">
+          <img
+            src="./media/svg/iconi5149-eox.svg"
+            alt="iconI5149"
+            class="frame2608143-icon1"
+          />
+        </div>
+      </div>
+    </div>
   </body>
 </html>

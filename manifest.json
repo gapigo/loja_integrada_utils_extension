@@ -18,8 +18,13 @@
     {
       "matches": ["https://lista.mercadolivre.com.br/*"],
       "js": ["mercado_livre/media_produtos.js"]
+    },
+    {
+      "matches": ["https://megausados.monday.com/*"],
+      "js": ["monday/api_monday.js"]
     }
   ],
+  "permissions": ["storage", "tabs"],
   "action": {
     "default_icon": {
       "16": "logo/logo_16.png",
