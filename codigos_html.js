@@ -46,10 +46,13 @@ async function getBlobFromUrl(url) {
   htmlEl.innerHTML = consulta.trim();
   let nome = htmlEl.querySelector('#id_descricao').value;
 
-  let codigoProgramado = `${getPaginaPublicacao(htmlEl)} - ${getLocalPublicacao(
-    htmlEl
-  )}\n\n${htmlEl.querySelector('#id_conteudo').innerText}`;
   let formato = getTipo(htmlEl);
+  let codigoProgramado = `${
+    formato === 'html' ? '<!--' : '/*'
+  }\nPágina publicação: ${getPaginaPublicacao(htmlEl)}
+  \nLocal Publicação: ${getLocalPublicacao(htmlEl)}\n
+  ${formato === 'html' ? '-->' : '*/'}
+  \n\n${htmlEl.querySelector('#id_conteudo').innerText}`;
   return {
     blob: new Blob([codigoProgramado], { type: 'text/plain;charset=utf-8' }),
     format: formato,
