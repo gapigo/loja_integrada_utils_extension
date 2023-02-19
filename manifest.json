@@ -9,10 +9,10 @@
         "https://app.lojaintegrada.com.br/painel/configuracao/html/listar"
       ],
       "js": [
-        "jquery.js",
+        "lib/jquery.js",
         "lib/zip/jszip.js",
         "lib/fileSaver/FileSaver.js",
-        "codigos_html.js"
+        "loja_integrada/backup.js"
       ]
     },
     {
@@ -22,6 +22,12 @@
     {
       "matches": ["https://megausados.monday.com/*"],
       "js": ["monday/api_monday.js"]
+    },
+    {
+      "matches": [
+        "https://app.lojaintegrada.com.br/painel/catalogo/produto/*/editar"
+      ],
+      "js": ["loja_integrada/custom_produto_form.js"]
     }
   ],
   "permissions": ["storage", "tabs"],
